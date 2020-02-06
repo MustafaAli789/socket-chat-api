@@ -44,14 +44,13 @@ io.on('connection', (socket)=>{ //the socket in the param is a specific instance
     socket.on('sendMessage', (message, callback) => {
         const user = getUser(socket.id) //client instance socket (specific user)
         io.to(user.room).emit('message', {user:user.name, text:message }); //sending message to fron end of all connected sockets
-        io.to(user.room).emit('roomData', {room:user.room, users:getUsersInRoom(user.room)}); //updating users in room when someone leaves
         callback()
     });
 
     socket.on('disconnect',()=>{
         const user = removeUser(socket.id);
-
         if (user) {
+            io.to(user.room).emit('roomData', {room:user.room, users:getUsersInRoom(user.room)}); //updating users in room when someone leaves
             io.to(user.room).emit('message', {user: 'admin', text:`${user.name} has left`})
         }
     });
