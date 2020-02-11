@@ -26,12 +26,12 @@ io.on('connection', (socket)=>{ //the socket in the param is a specific instance
 
         //here we are emiting a message from the backend to the fron end
         //tells users hes welcome to chat
-        socket.emit('message', { user: 'admin', text: `${user.name}, welcome to the room ${user.room}` });
+        socket.emit('message', { user: 'admin', payload: `${user.name}, welcome to the room ${user.room}`, type:"Message" });
         
         //broadcast allows emitin an event to all other sockets connected to the server
         //.to to specify the room
         //overall tells all other members of the room user has joined
-        socket.broadcast.to(user.room).emit('message', { user:'admin', text:`${user.name} has joined!` })
+        socket.broadcast.to(user.room).emit('message', { user:'admin', payload:`${user.name} has joined!`, type: "Message" })
 
         socket.join(user.room);
 
@@ -43,7 +43,7 @@ io.on('connection', (socket)=>{ //the socket in the param is a specific instance
     //here we are waiting on an event from the front end (front end will emit)
     socket.on('sendMessage', (message, callback) => {
         const user = getUser(socket.id) //client instance socket (specific user)
-        io.to(user.room).emit('message', {user:user.name, text:message }); //sending message to fron end of all connected sockets
+        io.to(user.room).emit('message', {user:user.name, payload:message.payload, type: message.type }); //sending message to fron end of all connected sockets
         callback()
     });
 
@@ -51,7 +51,7 @@ io.on('connection', (socket)=>{ //the socket in the param is a specific instance
         const user = removeUser(socket.id);
         if (user) {
             io.to(user.room).emit('roomData', {room:user.room, users:getUsersInRoom(user.room)}); //updating users in room when someone leaves
-            io.to(user.room).emit('message', {user: 'admin', text:`${user.name} has left`})
+            io.to(user.room).emit('message', {user: 'admin', payload:`${user.name} has left`, type: "Message"})
         }
     });
 });
