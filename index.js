@@ -48,7 +48,6 @@ io.on('connection', (socket)=>{ //the socket in the param is a specific instance
     });
 
     socket.on('disconnect',()=>{
-        console.log("receiving")
         const user = removeUser(socket.id);
         if (user) {
             io.to(user.room).emit('roomData', {room:user.room, users:getUsersInRoom(user.room)}); //updating users in room when someone leaves
