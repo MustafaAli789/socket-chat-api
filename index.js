@@ -52,7 +52,7 @@ io.on('connection', (socket)=>{ //the socket in the param is a specific instance
         const user = removeUser(socket.id);
         if (user) {
             io.to(user.room).emit('roomData', {room:user.room, users:getUsersInRoom(user.room)}); //updating users in room when someone leaves
-            io.to(user.room).emit('message', {type: "Messag", user: 'admin', payload:`${user.name} has left`})
+            io.to(user.room).emit('message', {type: "Message", user: 'admin', payload:`${user.name} has left`})
         }
     });
 });
