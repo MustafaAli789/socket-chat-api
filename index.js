@@ -19,8 +19,8 @@ io.on('connection', (socket)=>{ //the socket in the param is a specific instance
 
     //socket.on can take a callback function as a second param in the arrow function which can be passed from client side
     //good for error handling/running a method after the event has been emmitted from client side
-    socket.on('join', ({ name, room }, callback)=>{ 
-        const { error, user } = addUser({ id:socket.id, name, room });
+    socket.on('join', ({ name, room, profile }, callback)=>{ 
+        const { error, user } = addUser({ id:socket.id, name, room, profile });
 
         if (error) return callback(error);
 
